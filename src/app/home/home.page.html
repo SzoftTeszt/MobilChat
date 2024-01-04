@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Chat
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,12 +9,53 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Chat</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <div *ngFor="let message of messages" class="row my-2">
+    <div [ngClass]="message.name=='Attila'?'d-flex justify-content-end':''" class="col ">
+      <div class="row">
+        <div class="col">
+          <div>{{message.time}}</div>
+          <div>{{message.name}}</div>
+          <ng-container *ngIf="message.name=='Attila'; else nemEn">
+            <ion-textarea [(ngModel)]="message.message" labelPlacement="floating">        
+            </ion-textarea>
+          </ng-container>
+          <ng-template #nemEn>
+            <div>{{message.message}}</div>
+          </ng-template>
+        </div>
+        <div *ngIf="message.name=='Attila'" class="col">
+          <div>
+            <ion-button (click)="saveMessage(message)" size="small" shape="round" color="warning">Save</ion-button>
+          </div>
+          <div>
+            <ion-button (click)="deleteMessage(message)" size="small" shape="round" color="warning">Delete</ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
   </div>
+
+  <ion-list>
+    <ion-item>
+      <ion-textarea [(ngModel)]="newMessage" labelPlacement="floating">
+        <div slot="label">Message <ion-text color="danger">(Required)</ion-text></div>
+      </ion-textarea>
+    </ion-item>
+  </ion-list>
+
+  <ion-grid>
+    <ion-row class="ion-justify-content-start">
+      <ion-col size="12">
+        <ion-button (click)="addMessage()" shape="round" color="warning">Send</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+  
 </ion-content>
