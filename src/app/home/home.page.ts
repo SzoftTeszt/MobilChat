@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { BaseService } from '../base.service';
 import { map } from 'rxjs';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +12,7 @@ export class HomePage {
   newMessage:any
   messages:any
   userName="Attila"
-  constructor(private base:BaseService) {
+  constructor(private base:BaseService, private auth:AuthService) {
     this.base.getMessages().snapshotChanges().pipe(
       map(
         (ch)=>ch.map(
@@ -38,5 +39,8 @@ export class HomePage {
   }
   saveMessage(message:any){
     this.base.updateMessage(message)
+  }
+  logout(){
+    this.auth.logout()
   }
 }
