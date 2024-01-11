@@ -10,6 +10,7 @@ import { map } from 'rxjs';
 export class HomePage {
   newMessage:any
   messages:any
+  userName="Attila"
   constructor(private base:BaseService) {
     this.base.getMessages().snapshotChanges().pipe(
       map(
@@ -26,7 +27,7 @@ export class HomePage {
   addMessage(){
     if (this.newMessage){
       let time= new Date().toLocaleTimeString()
-      let body={name:"Attila", time:time, message:this.newMessage}
+      let body={name:this.userName, time:time, message:this.newMessage}
       this.base.addMessage(body)
       this.newMessage=""
     }

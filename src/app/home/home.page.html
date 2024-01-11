@@ -19,7 +19,7 @@
         <div class="col">
           <div>{{message.time}}</div>
           <div>{{message.name}}</div>
-          <ng-container *ngIf="message.name=='Attila'; else nemEn">
+          <ng-container *ngIf="message.name==userName; else nemEn">
             <ion-textarea [(ngModel)]="message.message" labelPlacement="floating">        
             </ion-textarea>
           </ng-container>
