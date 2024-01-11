@@ -13,6 +13,7 @@ export class SignInPage implements OnInit {
   phoneNo:any=""
   code=""
   recaptchaVerifier:any
+  recaptchaVerifierInisible:any
   recaptchaVerifierVisible:any
   user:any
   codeWrite=false
@@ -31,59 +32,56 @@ export class SignInPage implements OnInit {
   ngOnInit() {
   }
   ionViewWillLeave(){
-    this.recaptchaVerifierVisible.clear()
+    if (this.recaptchaVerifierVisible) this.recaptchaVerifierVisible.clear();
     this.recaptchaVerifierVisible=null
-    // this.recaptchaVerifier.clear()
-    this.recaptchaVerifier=null
   }
 
-  ionViewDidEnter(){
-    console.log("this.recaptchaVerifier: ",this.recaptchaVerifier)
-    console.log("this.recaptchaVerifierVisible: ",this.recaptchaVerifierVisible)
+  ionViewDidEnter(){ 
     this.codeWrite=false
     this.recaptcha=true
-    if (!this.recaptchaVerifier) this.recaptchaVerifier= new RecaptchaVerifier(
+    if (!this.recaptchaVerifierInisible) this.recaptchaVerifierInisible= new RecaptchaVerifier(
       getAuth(), 'recaptcha-container',
     {
       'size':'invisible',
-      'callback': ()=>{
+      'callback': (response:any)=>{
         console.log("Láthatatlan Oks!")
+        response(true)
       },
-      'expired-callback':()=>{
-        console.log("Láthatatlan Hiba!")
+      'expired-callback':(res:any)=>{
+        console.log("Láthatatlan Hiba!",res)
         this.recaptcha=false
       }
     })
+   
+    this.recaptchaVerifier=this.recaptchaVerifierInisible
 
-    this.recaptchaVerifierVisible= new RecaptchaVerifier(
+    if (!this.recaptchaVerifierVisible) this.recaptchaVerifierVisible= new RecaptchaVerifier(
       getAuth(), 'recaptcha-container-visible',
     {
       'size':'normal',
-      'callback': ()=>{
+      'callback': (response:any)=>{
         console.log("Látható Oks!")
         this.recaptcha=true
         this.recaptchaVerifier=this.recaptchaVerifierVisible
+        response(response)
       },
-      'expired-callback':()=>{
-        console.log("Látható Hiba!")
+      'expired-callback':(res:any)=>{
+        console.log("Látható Hiba!",res)
         this.recaptcha=false
       }
-    })
-    console.log("this.recaptchaVerifier: ",this.recaptchaVerifier)
-    console.log("this.recaptchaVerifierVisible: ",this.recaptchaVerifierVisible)
+    })   
+   
   }
 
-  signInWithPhone(){
-    console.log("this.recaptchaVerifier: ",this.recaptchaVerifier)
+  signInWithPhone(){   
     if (this.recaptcha) this.auth.signInwithPhone(this.phoneNo,this.recaptchaVerifier)
     .then(
-      ()=>{
+      (res:any)=>{
         // this.codeWrite=true
-        // kód
         this.codeVerifier()
       }
     ).catch(
-      (res)=>console.log("SignIn", res)
+      (res)=>console.log("SignIn(Hiba)", res)
     )
   }
 
@@ -116,10 +114,10 @@ export class SignInPage implements OnInit {
       {text:'Enter',
       handler:(res) =>{
         this.auth.verificationCode(res.code)
-        .then(()=>{console.log("OK!")})
+        .then(()=>{console.log("OKÉ!")})
         .catch(
-          ()=>{
-            this.recaptcha=false
+          ()=>{           
+            this.recaptcha=false           
             this.recaptchaVerifierVisible.render()
           }
         )

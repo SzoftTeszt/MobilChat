@@ -16,14 +16,14 @@
   <div class="phone-number">
     <ion-item>
       <ion-label>Your Phone number</ion-label>
-      <ion-input [disabled]="codeWrite" [(ngModel)]="phoneNo"></ion-input>
+      <ion-input label="phoneno" [disabled]="codeWrite" [(ngModel)]="phoneNo"></ion-input>
     </ion-item>
-    <ion-button [disabled]="codeWrite" expand="block" (click)="signInWithPhone()">Sign In With Phone</ion-button>
+    <ion-button [disabled]="codeWrite || !(recaptcha && phoneNo)" expand="block" (click)="signInWithPhone()">Sign In With Phone</ion-button>
   </div>
   <div [ngClass]="codeWrite?'visible':'invisible'" class="code">
   <ion-item>
     <ion-label>Code</ion-label>
-    <ion-input [(ngModel)]="code"></ion-input>
+    <ion-input label="code" [(ngModel)]="code"></ion-input>
   </ion-item>
   <ion-button expand="block" (click)="codeVerifier()">Sign In</ion-button>
   </div>
